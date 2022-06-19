@@ -14,18 +14,30 @@ class Home extends Component {
   // the addTodo function simply creates a new array that includes the user submitted todo item and then
   // updates the state with the new list.
   addTodo = (todo) => {
-    // In React, keys or ids in a list help identify which items have changed, been added or removed. Keys
-    // should not share duplicate values.
-    // To avoid having dup values, we use the Math.random() function to generate a random value for a todo id.
-    // This solution works for a small application but a more complex hashing function should be used when
-    // dealing with a larger data sensitive project.
-    todo.id = Math.random();
-    // Create a array that contains the current array and the new todo item
-    let new_list = [...this.state.todos, todo];
-    // Update the local state with the new array.
-    this.setState({
-      todos: new_list,
-    });
+
+    if(!this.state.todos.find(t => t.content === todo.content))
+    {
+      // In React, keys or ids in a list help identify which items have changed, been added or removed. Keys
+      // should not share duplicate values.
+      // To avoid having dup values, we use the Math.random() function to generate a random value for a todo id.
+      // This solution works for a small application but a more complex hashing function should be used when
+      // dealing with a larger data sensitive project.
+      todo.id = Math.random();
+      // Create a array that contains the current array and the new todo item
+      let new_list = [...this.state.todos, todo];
+      // Update the local state with the new array.
+      this.setState({
+        todos: new_list,
+      });
+    }
+  };
+
+  deleteTodo = (id) => {
+  const todos = this.state.todos.filter((todo) => { return todo.id !== id;
+  });
+  this.setState({
+    todos: todos,
+  });
   };
   render() {
     return (
@@ -36,7 +48,7 @@ class Home extends Component {
         <AddTodo addTodo={this.addTodo} />
         {/* When returning the Todos component, todos is a prop passed to the todos.js file
          to format and render the current todo list state */}
-        <Todos todos={this.state.todos} />
+        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo}/>
       </div>
     );
   }
